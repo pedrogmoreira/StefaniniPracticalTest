@@ -1,0 +1,118 @@
+﻿@model StefaniniPracticalTest.Domain.Filters.CustomerFilter
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="row">
+    @using (Html.BeginForm(FormMethod.Post, true, null))
+    {
+        <div class="form-row">
+            <div class="col-md-8 mb-3">
+                <label class="control-label col-sm-6" for="Name">Name</label>
+                @Html.TextBox("Name", null, new { @type = "input", @class = "form-control" })
+            </div>
+            <div class="col-md-4 mb-3">
+                <label class="control-label col-sm-6" for="Gender">Gender</label>
+                @Html.DropDownListFor(model => model.GenderId, new SelectList(ViewBag.Genders, "Id", "Name"), "--- Select ---", new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col-md-4 mb-3">
+                <label class="control-label col-sm-6" for="City">City</label>
+                @Html.DropDownListFor(model => model.CityId, new SelectList(ViewBag.Cities, "Id", "Name"), "--- Select ---", new { @class = "form-control" })
+            </div>
+            <div class="col-md-4 mb-3">
+                <label class="control-label col-sm-6" for="Region">Region</label>
+                @Html.DropDownListFor(model => model.RegionId, new SelectList(ViewBag.Regions, "Id", "Name"), "--- Select ---", new { @class = "form-control" })
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label class="control-label col-sm-6" for="Classification">Classification</label>
+                @Html.DropDownListFor(model => model.ClassificationId, new SelectList(ViewBag.Classifications, "Id", "Name"), "--- Select ---", new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col-md-4 mb-3">
+                <label class="control-label col-sm-12">Last Purchase</label>
+                @Html.TextBox("LastPurchaseFrom", null, new { @type = "date", @class = "form-control" })
+
+            </div>
+            <div class="col-md-4 mb-3">
+                <label class="control-label col-sm-12">Until</label>
+                @Html.TextBox("LastPurchaseTo", null, new { @type = "date", @class = "form-control" })
+
+            </div>
+            @if (User.IsInRole("Administrator"))
+            {
+                <div class="col-md-4 mb-3">
+                    <label class="control-label col-sm-6">Seller</label>
+                    @Html.DropDownListFor(model => model.SellerId, new SelectList(ViewBag.Sellers, "Id", "Login"), "--- Select ---", new { @class = "form-control" })
+                </div>
+            }
+        </div>
+        <div class="d-flex justify-content-end mb-3">
+            <div class="col-md-2">
+                <button class="btn btn-outline-dark btn-block" type="submit">Search <span class="material-icons">search</span></button>
+            </div>
+            <div class="col-md-2">
+                <button class="btn btn-outline-dark btn-block" type="button" id="ClearFields">Clear Fields <span class="material-icons">clear</span></button>
+            </div>
+        </div>
+    }
+</div>
+<div class="row">
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Classification</th>
+                <th scope="col">Name</th>
+                <th scope="col">Phone</th>
+                <th scope="col">Gender</th>
+                <th scope="col">City</th>
+                <th scope="col">Region</th>
+                <th scope="col">Last Purchase</th>
+                @if (User.IsInRole("Administrator"))
+                {
+                    <th scope="col">Seller</th>
+                }
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var item in ViewBag.Customers)
+            {
+                <tr>
+                    <td>@item.Classification.Name</td>
+                    <td>@item.Name</td>
+                    <td>@item.Phone</td>
+                    <td>@item.Gender.Name</td>
+                    <td>@item.City.Name</td>
+                    <td>@item.Region.Name</td>
+                    <td>@item.LastPurchase.ToShortDateString()</td>
+                    @if (User.IsInRole("Administrator"))
+                    {
+                        <td>@item.User.Login</td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section Scripts
+{
+    <script type="text/javascript">
+        $('#ClearFields').on('click', () => {
+            $('#Name').val('');
+            $('#GenderId').val(null);
+            $('#CityId').val(null);
+            $('#RegionId').val(null);
+            $('#ClassificationId').val(null);
+            $('#LastPurchaseFrom').val(null);
+            $('#LastPurchaseTo').val(null);
+            if ($('#SellerId').length > 0) {
+                $('#SellerId').val(null);
+            }
+        })
+    </script>
+}

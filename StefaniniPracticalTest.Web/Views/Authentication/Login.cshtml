@@ -1,0 +1,33 @@
+﻿@model StefaniniPracticalTest.Domain.ViewModel.LoginViewModel
+@{
+    ViewData["Title"] = "Login";
+    //@Html.TextBoxFor(x => x.Email, new { type = "email", class = "form-control", placeholder = "Email address", required = "", autofocus = "" })
+}
+
+@using (Html.BeginForm(FormMethod.Post, true, new { @class = "form-signin" }))
+{
+
+    <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+    @Html.ValidationMessage("Credentials")
+
+    @Html.TextBoxFor(x => x.Email, new { @type = "email", @class = "form-control", @placeholder = "E-mail address", @required = "" })
+    @Html.ValidationMessageFor(model => model.Email)
+
+    @Html.TextBoxFor(x => x.Password, new { @type = "password", @class = "form-control", @placeholder = "Password", @required = "" })
+    @Html.ValidationMessageFor(model => model.Password)
+
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+}
+
+@section Scripts
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var isInvalid = @Html.Raw(Json.Serialize(ViewData.ModelState.Keys.Contains("Credentials")));
+            console.log(isInvalid);
+            if (isInvalid === true) {
+                $('.form-control').addClass('input-validation-error');
+            }
+        });
+    </script>
+}
