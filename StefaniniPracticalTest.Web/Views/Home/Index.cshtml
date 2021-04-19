@@ -113,6 +113,22 @@
             if ($('#SellerId').length > 0) {
                 $('#SellerId').val(null);
             }
+        });
+
+        $('#CityId').on('change', () => {
+            const cityId = $('#CityId option:selected').val();
+            $.getJSON({
+                url: '/Home/FetchRegions',
+                data: { cityId },
+                success: (data) => {
+                    var html = '<select class="form-control" id="RegionId" name="RegionId"><option value="">--- Select ---</option>';
+                    data.forEach((item) => {
+                        html += '<option value="' + item.id + '">' + item.name + '</option>';
+                    });
+                    html += '</select>';
+                    $('#RegionId').html(html);
+                }
+            })
         })
     </script>
 }

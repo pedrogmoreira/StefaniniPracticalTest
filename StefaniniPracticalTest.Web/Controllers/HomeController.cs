@@ -1,6 +1,8 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using StefaniniPracticalTest.Domain.Entities;
 using StefaniniPracticalTest.Domain.Extensions;
 using StefaniniPracticalTest.Domain.Filters;
 using StefaniniPracticalTest.Domain.Interfaces.Repositories;
@@ -49,12 +51,17 @@ namespace StefaniniPracticalTest.Web.Controllers
             return View(customerFilter);
         }
 
+        public JsonResult FetchRegions(int cityId) // its a GET, not a POST
+        {
+            return Json(_regionRepository.GetRegions(cityId));
+        }
+
         private void LoadDropdownData()
         {
             ViewBag.Classifications = _classificationRepository.GetAll();
             ViewBag.Genders = _genderRepository.GetAll();
             ViewBag.Cities = _cityRepository.GetAll();
-            ViewBag.Regions = _regionRepository.GetAll();
+            ViewBag.Regions = new List<Region>();
 
             if (User.IsInRole("Administrator"))
             {
